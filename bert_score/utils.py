@@ -244,15 +244,15 @@ def sent_encode(tokenizer, sent):
             )
 
 
-def get_model(model_type, num_layers, all_layers=None):
+def get_model(model_type, num_layers, all_layers=None, torch_dtype=torch.bfloat16):
     if model_type.startswith("scibert"):
-        model = AutoModel.from_pretrained(cache_scibert(model_type))
+        model = AutoModel.from_pretrained(cache_scibert(model_type), torch_dtype=torch_dtype)
     elif "t5" in model_type:
         from transformers import T5EncoderModel
 
-        model = T5EncoderModel.from_pretrained(model_type)
+        model = T5EncoderModel.from_pretrained(model_type, torch_dtype=torch_dtype)
     else:
-        model = AutoModel.from_pretrained(model_type)
+        model = AutoModel.from_pretrained(model_type, torch_dtype=torch_dtype)
     model.eval()
 
     if hasattr(model, "decoder") and hasattr(model, "encoder"):
