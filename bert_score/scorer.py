@@ -36,6 +36,7 @@ class BERTScorer:
         rescale_with_baseline=False,
         baseline_path=None,
         use_fast_tokenizer=False,
+        torch_dtype=torch.bfloat16,
     ):
         """
         Args:
@@ -58,6 +59,7 @@ class BERTScorer:
             - :param: `rescale_with_baseline` (bool): rescale bertscore with pre-computed baseline
             - :param: `baseline_path` (str): customized baseline file
             - :param: `use_fast_tokenizer` (bool): `use_fast` parameter passed to HF tokenizer
+            - :param: `torch_dtype` (torch.dtype): `torch_dtype` parameter passed to HF Model.
         """
 
         assert (
@@ -95,7 +97,7 @@ class BERTScorer:
         # Building model and tokenizer
         self._use_fast_tokenizer = use_fast_tokenizer
         self._tokenizer = get_tokenizer(self.model_type, self._use_fast_tokenizer)
-        self._model = get_model(self.model_type, self.num_layers, self.all_layers)
+        self._model = get_model(self.model_type, self.num_layers, self.all_layers, torch_dtype=torch_dtype)
         self._model.to(self.device)
 
         self._idf_dict = None
